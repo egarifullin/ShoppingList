@@ -17,6 +17,5 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.shopList.observe(this){
 
         }
-        mainViewModel.getShopList()
     }
 }
