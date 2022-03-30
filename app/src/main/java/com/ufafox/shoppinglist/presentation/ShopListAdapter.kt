@@ -58,5 +58,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopListViewHolder>
     companion object{
         const val ENABLED_TYPE = 1
         const val DISABLED_TYPE = 0
+
+        const val MAX_POOL_SIZE = 30
     }
 }
