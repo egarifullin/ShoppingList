@@ -18,10 +18,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        setupRecyclerView()
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         mainViewModel.shopList.observe(this){
-            setupRecyclerView()
             shopListAdapter.shopList = it
 
         }
