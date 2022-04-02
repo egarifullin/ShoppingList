@@ -11,7 +11,8 @@ import java.lang.RuntimeException
 
 class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopListViewHolder>() {
 
-
+    var onShopItemLongClickListener : ((ShopItem) -> Unit)? = null
+    var onShopItemClickListener: ((ShopItem) -> Unit)? = null
 
     var shopList = listOf<ShopItem>()
     set(value) {
@@ -34,7 +35,13 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopListViewHolder>
         val shopItem = shopList[position]
         holder.tvName.text = shopItem.name
         holder.tvCount.text = shopItem.count.toString()
-        holder.view.setOnLongClickListener { true }
+        holder.view.setOnLongClickListener {
+            onShopItemLongClickListener?.invoke(shopItem)
+            true
+        }
+        holder.view.setOnClickListener{
+            onShopItemClickListener?.invoke(shopItem)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -50,10 +57,11 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopListViewHolder>
         }
     }
 
-    class ShopListViewHolder(val view : View): RecyclerView.ViewHolder(view){
+    class ShopListViewHolder(val view : View): RecyclerView.ViewHolder(view) {
         val tvName = view.findViewById<TextView>(R.id.tv_name)
         val tvCount = view.findViewById<TextView>(R.id.tv_count)
     }
+
 
     companion object{
         const val ENABLED_TYPE = 1
