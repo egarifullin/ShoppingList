@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputLayout
 import com.ufafox.shoppinglist.R
 import com.ufafox.shoppinglist.domain.ShopItem
+import java.lang.RuntimeException
 
 class ShopItemFragment() : Fragment() {
 
@@ -38,9 +39,13 @@ class ShopItemFragment() : Fragment() {
         return inflater.inflate(R.layout.fragment_shop_item, container, false)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parseParams()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        parseParams()
         viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
         initViews(view)
         addTextChangeListeners()
@@ -121,15 +126,25 @@ class ShopItemFragment() : Fragment() {
     }
 
     fun parseParams() {
-        if (screenMode != MODE_EDIT && screenMode != MODE_ADD) {
-            throw RuntimeException("Unknown screen mode $screenMode")
+        val args = requireArguments()
+        if (!args.containsKey(EXTRA_SCREEN_MODE)) {
+            throw RuntimeException("Param screen mode is absent")
         }
-        if (screenMode == MODE_EDIT && shopItemId == ShopItem.UNDEFINED_ID) {
-            throw RuntimeException("No param id in edit mode")
+        val mode = args.getString(EXTRA_SCREEN_MODE)
+        if (mode != MODE_EDIT && mode != MODE_ADD) {
+            throw RuntimeException("Unknown screen mode $mode")
+        }
+        screenMode = mode
+        if (screenMode == MODE_EDIT) {
+            if (!args.containsKey(EXTRA_SHOP_ITEM_ID)) {
+                throw RuntimeException("No param id in edit mode")
+            } else {
+                shopItemId = args.getInt(EXTRA_SHOP_ITEM_ID, ShopItem.UNDEFINED_ID)
+            }
         }
     }
 
-    fun initViews(view: View) {
+    private fun initViews(view: View) {
         tilName = view.findViewById(R.id.til_name)
         tilCount = view.findViewById(R.id.til_count)
         etName = view.findViewById(R.id.et_name)
