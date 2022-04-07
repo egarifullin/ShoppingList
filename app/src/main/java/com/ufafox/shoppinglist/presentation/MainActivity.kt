@@ -1,6 +1,7 @@
 package com.ufafox.shoppinglist.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -11,7 +12,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.ufafox.shoppinglist.R
 import com.ufafox.shoppinglist.presentation.ShopItemActivity.Companion.newIntentEditItem
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private lateinit var shopListAdapter: ShopListAdapter
 
@@ -53,6 +54,11 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.shop_item_container_main, fragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onEditingFinished() {
+        Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_LONG).show()
+        supportFragmentManager.popBackStack()
     }
 
     private fun setupRecyclerView() {
